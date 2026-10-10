@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Schulter-Prehab Tracker</title>
+<meta name="theme-color" content="#12161A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prehab">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: gym logbook. Sticky tab bar, one card per exercise with set rows (kg × Wdh × done), fixed footer with rest timer and save. */
+:root{
+  --bg:#ECEFF1; --surface:#FFFFFF; --ink:#12161A; --ink2:#2E3740; --muted:#55616C; --line:#C9D0D6; --tint:#E3E7EA;
+  --accent:#C2410C; --accent-ink:#FFFFFF; --ok:#1E7A4C; --ok-bg:#E3F3EA; --warn:#B42318;
+  --display:'Big Shoulders Display','Arial Narrow',sans-serif;
+  --body:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root{
+  --bg:#0F1317; --surface:#171D23; --ink:#E7EBEE; --ink2:#C9D1D8; --muted:#9BA7B2; --line:#2B343D; --tint:#1F262D;
+  --accent:#F28A4B; --accent-ink:#12161A; --ok:#5FD39A; --ok-bg:#12291E; --warn:#FF8A80; color-scheme:dark } }
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px}
+[hidden]{display:none!important}
+
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-block:10px 4px}
+.brand h1{margin:0;white-space:nowrap;font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:24px;line-height:1;letter-spacing:.01em}
+.brand a{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.04em;text-transform:uppercase}
+.brand a:hover{color:var(--ink)}
+nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding-block:6px 10px}
+nav.tabs button{border:1px solid var(--line);background:var(--surface);padding:9px 4px;font-size:14px;font-weight:500;min-height:42px}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+main{padding-block:16px}
+.view{display:flex;flex-direction:column;gap:14px}
+
+.panel{background:var(--surface);border:1px solid var(--line);padding:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink)}
+.seg button{border:0;background:transparent;padding:8px 18px;font-family:var(--display);font-weight:800;font-size:22px;line-height:1;min-height:44px;min-width:64px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+input[type=date]{border:1px solid var(--line);background:var(--surface);padding:9px 10px;min-height:44px}
+.phase{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-top:12px}
+.phase .p{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:22px;line-height:1}
+.phase .w{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.hint{font-size:14px;color:var(--ink2);margin:8px 0 0}
+.hint b{color:var(--accent)}
+.editing{background:var(--tint);border:1px dashed var(--accent);padding:10px 12px;font-size:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+
+.ex{background:var(--surface);border:1px solid var(--line)}
+.ex.complete{border-color:var(--ok)}
+.exhead{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;padding:12px 12px 8px}
+.thumb{display:block;width:72px;height:72px;overflow:hidden;background:var(--tint);border:1px solid var(--line)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.exttl{display:flex;gap:8px;align-items:baseline}
+.no{font-family:var(--display);font-weight:800;font-size:24px;line-height:1;color:var(--accent);flex:none}
+.ex h3{margin:0;font-size:16px;line-height:1.2;font-weight:600}
+.dose{font-family:var(--mono);font-size:13px;color:var(--ink2);margin-top:4px}
+.last{font-size:13px;color:var(--muted);margin-top:3px}
+.last b{font-weight:500;color:var(--ink2)}
+.sets{display:flex;flex-direction:column;gap:6px;padding:4px 12px 12px}
+.set{display:grid;grid-template-columns:28px minmax(0,1fr) 14px minmax(0,1fr) 52px;gap:6px;align-items:center}
+.set .sn{font-family:var(--mono);font-size:13px;color:var(--muted);text-align:center}
+.set .x{text-align:center;color:var(--muted);font-size:14px}
+.fld{position:relative}
+.fld input{width:100%;min-height:46px;border:1px solid var(--line);background:var(--bg);padding:8px 40px 8px 10px;font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;border-radius:0;-webkit-appearance:none;appearance:none}
+.fld input::placeholder{color:var(--muted);opacity:.75}
+.fld .u{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:12px;color:var(--muted);pointer-events:none}
+.fld.none{visibility:hidden}
+.done{min-height:46px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.done svg{width:22px;height:22px;stroke:var(--muted)}
+.done[aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
+.done[aria-pressed="true"] svg{stroke:#FFFFFF}
+.set.isdone .fld input{background:var(--ok-bg);border-color:var(--ok)}
+.setbtns{display:flex;gap:6px;padding:0 12px 12px}
+.ghost{border:1px solid var(--line);background:transparent;padding:8px 12px;font-size:14px;min-height:40px}
+.ghost:hover{border-color:var(--ink)}
+.ghost.danger{color:var(--warn);border-color:var(--warn)}
+textarea{width:100%;min-height:80px;border:1px solid var(--line);background:var(--bg);padding:10px;resize:vertical}
+
+footer.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+footer.bar .wrap{display:flex;flex-direction:column;gap:8px;padding-block:10px}
+.timer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.timer .t{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;min-width:66px;font-weight:500}
+.timer .t.over{color:var(--accent)}
+.timer .tl{font-size:13px;color:var(--muted);margin-right:auto}
+.chipbtn{border:1px solid var(--line);background:var(--bg);padding:6px 10px;font-family:var(--mono);font-size:13px;min-height:38px}
+.primary{width:100%;border:0;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:17px;min-height:50px;letter-spacing:.01em}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.progressline{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--ink);color:var(--bg);padding:10px 16px;font-size:14px;max-width:calc(100% - 32px)}
+
+.sess{background:var(--surface);border:1px solid var(--line)}
+.sess summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;gap:12px;align-items:center}
+.sess summary::-webkit-details-marker{display:none}
+.badge{font-family:var(--display);font-weight:800;font-size:22px;line-height:1;width:36px;height:36px;display:grid;place-items:center;background:var(--ink);color:var(--bg);flex:none}
+.sess .meta{min-width:0;flex:1}
+.sess .d{font-weight:600}
+.sess .s{font-size:13px;color:var(--muted)}
+.sess .body{padding:0 14px 14px;display:flex;flex-direction:column;gap:6px}
+.sess .line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:14px;border-top:1px solid var(--line);padding-top:6px}
+.sess .line .v{font-family:var(--mono);font-size:13px;text-align:right;color:var(--ink2)}
+.sess .note{font-size:14px;color:var(--ink2);font-style:italic}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line)}
+
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);padding:10px 12px}
+.stat .n{font-family:var(--display);font-weight:800;font-size:34px;line-height:1}
+.stat .k{font-size:13px;color:var(--muted)}
+.prog{background:var(--surface);border:1px solid var(--line);padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:10px;align-items:center}
+.prog h3{margin:0;font-size:15px;font-weight:600;line-height:1.25}
+.prog .s{font-size:13px;color:var(--muted);margin-top:2px}
+.prog .best{font-family:var(--mono);font-size:13px;color:var(--ink2);margin-top:2px}
+.spark{width:132px;height:44px;display:block}
+.spark .ln{fill:none;stroke:var(--accent);stroke-width:2}
+.spark .ar{fill:var(--accent);opacity:.12}
+.spark .dt{fill:var(--accent)}
+.spark .gd{stroke:var(--line);stroke-width:1}
+h2.sec{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:24px;line-height:1;margin:8px 0 0;letter-spacing:.01em}
+
+.data p{margin:0 0 10px;font-size:15px;color:var(--ink2)}
+.data .btns{display:flex;flex-wrap:wrap;gap:8px}
+.data select{border:1px solid var(--line);background:var(--bg);padding:8px 10px;min-height:42px}
+.ok{color:var(--ok)} .bad{color:var(--warn)}
+@media (prefers-reduced-motion: no-preference){ .toast{transition:opacity .2s} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><h1>Schulter-Prehab</h1><a href="index.html">Anleitung</a></div>
+    <nav class="tabs" role="tablist" aria-label="Bereiche">
+      <button role="tab" id="tab-heute" aria-controls="v-heute" aria-selected="true">Heute</button>
+      <button role="tab" id="tab-verlauf" aria-controls="v-verlauf" aria-selected="false">Verlauf</button>
+      <button role="tab" id="tab-fortschritt" aria-controls="v-fortschritt" aria-selected="false">Fortschritt</button>
+      <button role="tab" id="tab-daten" aria-controls="v-daten" aria-selected="false">Daten</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="v-heute" role="tabpanel" aria-labelledby="tab-heute"></section>
+  <section class="view" id="v-verlauf" role="tabpanel" aria-labelledby="tab-verlauf" hidden></section>
+  <section class="view" id="v-fortschritt" role="tabpanel" aria-labelledby="tab-fortschritt" hidden></section>
+  <section class="view data" id="v-daten" role="tabpanel" aria-labelledby="tab-daten" hidden></section>
+</main>
+
+<footer class="bar" id="bar">
+  <div class="wrap">
+    <div class="timer" id="timer" hidden>
+      <span class="t" id="timerT">1:00</span><span class="tl" id="timerL">Pause</span>
+      <button class="chipbtn" id="timerPlus">+15 s</button>
+      <button class="chipbtn" id="timerStop">Stopp</button>
+    </div>
+    <div class="progressline" id="progressline"></div>
+    <button class="primary" id="saveBtn">Einheit speichern</button>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+var KEY='schulterPrehab.v1';
+var START=new Date(2026,9,12), END=new Date(2027,0,3);
+var PHASES=[{from:1,to:4,name:'Fundament',sets:2},{from:5,to:7,name:'Steigern',sets:3},{from:8,to:8,name:'Deload',sets:2},{from:9,to:10,name:'Peak',sets:3},{from:11,to:12,name:'Erhalten',sets:2}];
+/* f1: 'kg' | 'band' | null   f2: unit of the second field */
+var EX=[
+ {id:'a1',u:'A',no:'01',name:'Seated DB Abducted External Rotation',img:'e1_b.jpg',href:'index.html#u1',dose:'2–3 × 12–15 / Seite',f1:'kg',f2:'Wdh',side:true},
+ {id:'a2',u:'A',no:'02',name:'Bench Supported DB Overhead Y Press',img:'e2_b.jpg',href:'index.html#u2',dose:'2–3 × 10–12',f1:'kg',f2:'Wdh'},
+ {id:'a3',u:'A',no:'03',name:'Cable Abducted External Rotation',img:'e3_b.jpg',href:'index.html#u3',dose:'2–3 × 12–15 / Seite',f1:'kg',f2:'Wdh',side:true},
+ {id:'a4',u:'A',no:'04',name:'Two Rope Face Pull',img:'e4_b.jpg',href:'index.html#u4',dose:'3 × 12–15',f1:'kg',f2:'Wdh'},
+ {id:'a5',u:'A',no:'05',name:'Scap Pull-ups (Neutral Grip)',img:'e5_b.jpg',href:'index.html#u5',dose:'2–3 × 8–10',f1:null,f2:'Wdh'},
+ {id:'a6',u:'A',no:'06',name:'Cable External Rotation',img:'e6_b.jpg',href:'index.html#u6',dose:'2–3 × 12–15 / Seite',f1:'kg',f2:'Wdh',side:true},
+ {id:'a7',u:'A',no:'07',name:'Push-ups Position T-spine Rotations',img:'e7_b.jpg',href:'index.html#u7',dose:'2 × 6–8 / Seite',f1:null,f2:'Wdh',side:true},
+ {id:'a8',u:'A',no:'08',name:'Supinated Band Pull Apart',img:'e8_b.jpg',href:'index.html#u8',dose:'2–3 × 15–20',f1:'band',f2:'Wdh'},
+ {id:'a9',u:'A',no:'09',name:'Dead Hang (Neutral Grip)',img:'e9_a.jpg',href:'index.html#u9',dose:'2–3 × 20–45 s',f1:null,f2:'s'},
+ {id:'b1',u:'B',no:'B1',name:'Push-up Plus',img:'b1_b.svg',href:'index.html#b1',dose:'2–3 × 10–12',f1:null,f2:'Wdh'},
+ {id:'b2',u:'B',no:'B2',name:'Cable Internal Rotation',img:'b2_b.svg',href:'index.html#b2',dose:'2–3 × 12–15 / Seite',f1:'kg',f2:'Wdh',side:true},
+ {id:'b3',u:'B',no:'B3',name:'Prone Y-T Raise',img:'b3_b.svg',href:'index.html#b3',dose:'2–3 × 8–10 je Form',f1:'kg',f2:'Wdh'},
+ {id:'b4',u:'B',no:'B4',name:'Bottoms-up Kettlebell Carry',img:'b4_b.svg',href:'index.html#b4',dose:'3 × 20–30 m / Seite',f1:'kg',f2:'m',side:true},
+ {id:'b5',u:'B',no:'B5',name:'Open Book',img:'b5_b.svg',href:'index.html#b5',dose:'2 × 8 / Seite',f1:null,f2:'Wdh',side:true}
+];
+var EXBY={}; EX.forEach(function(e){EXBY[e.id]=e;});
+
+/* ---------- storage ---------- */
+var storageOK=true;
+function blank(){return {v:1,sessions:[],draft:null,settings:{rest:60,autoRest:true}};}
+function load(){
+  try{var raw=localStorage.getItem(KEY); if(!raw) return blank(); var d=JSON.parse(raw);
+    if(!d||!Array.isArray(d.sessions)) return blank(); d.settings=Object.assign({rest:60,autoRest:true},d.settings||{}); return d;}
+  catch(e){storageOK=false; return blank();}
+}
+var db=load();
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(db)); storageOK=true;}catch(e){storageOK=false; toast('Speichern im Browser fehlgeschlagen. Bitte unter „Daten“ exportieren.');} }
+try{ if(navigator.storage&&navigator.storage.persist){ navigator.storage.persist(); } }catch(e){}
+
+/* ---------- helpers ---------- */
+function pad(n){return (n<10?'0':'')+n;}
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function parseISO(s){var p=String(s||'').split('-'); return new Date(+p[0],(+p[1]||1)-1,+p[2]||1);}
+function today(){return iso(new Date());}
+var WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
+function fmtDate(s){var d=parseISO(s); return WD[d.getDay()]+' '+pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();}
+function fmtShort(s){var d=parseISO(s); return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.';}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){ if(v==null||v==='') return null; var n=parseFloat(String(v).replace(',','.')); return isFinite(n)?n:null; }
+function fmtNum(n){ if(n==null) return ''; return (Math.round(n*100)/100).toString().replace('.',','); }
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function phaseFor(s){
+  var d=parseISO(s); var days=Math.floor((d-START)/864e5);
+  if(days<0) return {week:0,name:'Vorbereitung',sets:2,label:'Vor dem Start am 12.10.'};
+  var week=Math.floor(days/7)+1;
+  if(d>END) return {week:week,name:'Nach dem Winter Arc',sets:3,label:'Winter Arc abgeschlossen'};
+  var p=PHASES.filter(function(p){return week>=p.from&&week<=p.to;})[0];
+  return {week:week,name:p.name,sets:p.sets,label:'Woche '+week+' von 12'};
+}
+function sortedSessions(){ return db.sessions.slice().sort(function(a,b){ return a.date<b.date?1:a.date>b.date?-1:(b.savedAt||0)-(a.savedAt||0); }); }
+function suggestUnit(){ var s=sortedSessions(); if(!s.length) return 'A'; return s[0].unit==='A'?'B':'A'; }
+function lastSets(exId, excludeId){
+  var s=sortedSessions();
+  for(var i=0;i<s.length;i++){ if(s[i].id===excludeId) continue; var ex=s[i].ex&&s[i].ex[exId];
+    if(ex){ var done=ex.filter(function(x){return x.done&&(num(x.val)!=null);}); if(done.length) return {date:s[i].date,sets:done}; } }
+  return null;
+}
+function setText(e,st){ var v=num(st.val), k=num(st.kg);
+  var unit=e.f2==='Wdh'?'':' '+e.f2;
+  var left = e.f1==='kg' && k!=null ? fmtNum(k)+' kg × ' : (e.f1==='band' && st.kg ? st.kg+' × ' : '');
+  return left+(v!=null?fmtNum(v):'–')+unit; }
+
+/* ---------- draft ---------- */
+function newDraft(unit,date){
+  var ph=phaseFor(date); var ex={};
+  EX.filter(function(e){return e.u===unit;}).forEach(function(e){
+    var n=ph.sets; if(e.id==='a4'||e.id==='b4') n=Math.max(n,ph.name==='Deload'?2:3);
+    ex[e.id]=[]; for(var i=0;i<n;i++) ex[e.id].push({kg:'',val:'',done:false});
+  });
+  return {date:date,unit:unit,note:'',ex:ex,editingId:null};
+}
+function draftHasData(d){ if(!d) return false; if(d.note) return true;
+  return Object.keys(d.ex).some(function(k){return d.ex[k].some(function(s){return s.done||s.kg!==''||s.val!=='';});}); }
+if(!db.draft){ db.draft=newDraft(suggestUnit(),today()); save(); }
+
+/* ---------- toast ---------- */
+var toastT;
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(function(){t.hidden=true;},2600); }
+
+/* ---------- tabs ---------- */
+var current='heute';
+function show(name){ current=name;
+  ['heute','verlauf','fortschritt','daten'].forEach(function(n){
+    document.getElementById('tab-'+n).setAttribute('aria-selected',n===name?'true':'false');
+    document.getElementById('v-'+n).hidden=(n!==name);
+  });
+  document.getElementById('saveBtn').hidden = name!=='heute';
+  document.getElementById('progressline').hidden = name!=='heute';
+  syncBar();
+  render(); window.scrollTo(0,0);
+  try{sessionStorage.setItem(KEY+'.tab',name);}catch(e){}
+}
+['heute','verlauf','fortschritt','daten'].forEach(function(n){ document.getElementById('tab-'+n).addEventListener('click',function(){show(n);}); });
+
+/* ---------- render: heute ---------- */
+var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function renderHeute(){
+  var d=db.draft, ph=phaseFor(d.date), sug=suggestUnit(), last=sortedSessions()[0];
+  var h='';
+  if(d.editingId){ h+='<div class="editing"><span>Du bearbeitest die gespeicherte Einheit vom '+esc(fmtDate(d.date))+'.</span><button class="ghost" data-act="cancelEdit">Bearbeiten abbrechen</button></div>'; }
+  h+='<div class="panel"><div class="row" style="justify-content:space-between">'+
+     '<div class="row"><span class="lbl">Einheit</span><div class="seg" role="group" aria-label="Einheit wählen">'+
+     '<button data-act="unit" data-u="A" aria-pressed="'+(d.unit==='A')+'">A</button><button data-act="unit" data-u="B" aria-pressed="'+(d.unit==='B')+'">B</button></div></div>'+
+     '<label class="row"><span class="lbl">Datum</span><input type="date" id="dDate" value="'+esc(d.date)+'"></label></div>'+
+     '<div class="phase"><span class="p">'+esc(ph.name)+'</span><span class="w">'+esc(ph.label)+' · '+ph.sets+' Sätze</span></div>';
+  if(!d.editingId){
+    h+= last ? '<p class="hint">Letzte Einheit: '+esc(last.unit)+' ('+esc(fmtShort(last.date))+'). Vorschlag heute: <b>Einheit '+sug+'</b></p>'
+             : '<p class="hint">Erste Einheit. Tippe auf den Haken, um einen Satz abzuhaken. Leere Felder übernehmen dabei die grauen Vorschlagswerte vom letzten Mal.</p>';
+  }
+  h+='</div>';
+  EX.filter(function(e){return e.u===d.unit;}).forEach(function(e){ h+=exCard(e); });
+  h+='<div class="panel"><label class="lbl" for="dNote">Notiz</label><textarea id="dNote" placeholder="Wie hat sich die Schulter angefühlt?">'+esc(d.note)+'</textarea></div>';
+  h+='<div class="row"><button class="ghost danger" data-act="discard" id="discardBtn">Eingaben verwerfen</button></div>';
+  document.getElementById('v-heute').innerHTML=h;
+  updateProgress();
+}
+function exCard(e){
+  var d=db.draft, sets=d.ex[e.id]||[], prev=lastSets(e.id,d.editingId);
+  var complete=sets.length&&sets.every(function(s){return s.done;});
+  var h='<article class="ex'+(complete?' complete':'')+'" id="card-'+e.id+'">'+
+    '<div class="exhead"><a class="thumb" href="'+e.href+'" aria-label="Anleitung: '+esc(e.name)+'"><img src="'+e.img+'" alt="" loading="lazy"></a><div>'+
+    '<div class="exttl"><span class="no">'+e.no+'</span><h3>'+esc(e.name)+'</h3></div>'+
+    '<div class="dose">'+esc(e.dose)+'</div>'+
+    (prev?'<div class="last">Letztes Mal ('+esc(fmtShort(prev.date))+'): <b>'+prev.sets.map(function(s){return esc(setText(e,s));}).join(' · ')+'</b></div>':'<div class="last">Noch keine Werte</div>')+
+    '</div></div><div class="sets">';
+  sets.forEach(function(s,i){ h+=setRow(e,s,i,prev); });
+  h+='</div><div class="setbtns"><button class="ghost" data-act="addSet" data-ex="'+e.id+'">+ Satz</button>'+
+     (sets.length>1?'<button class="ghost" data-act="delSet" data-ex="'+e.id+'">− Satz</button>':'')+'</div></article>';
+  return h;
+}
+function phFor(e,prev,i,field){
+  if(!prev) return ''; var p=prev.sets[Math.min(i,prev.sets.length-1)]; if(!p) return '';
+  if(field==='kg') return e.f1==='kg'? fmtNum(num(p.kg)) : (p.kg||'');
+  return fmtNum(num(p.val));
+}
+function setRow(e,s,i,prev){
+  var f1=e.f1==='kg'?'<div class="fld"><input inputmode="decimal" enterkeyhint="next" aria-label="Satz '+(i+1)+' Gewicht in kg" data-f="kg" data-ex="'+e.id+'" data-i="'+i+'" value="'+esc(s.kg)+'" placeholder="'+esc(phFor(e,prev,i,'kg'))+'"><span class="u">kg</span></div>'
+        : e.f1==='band'?'<div class="fld"><input inputmode="text" aria-label="Satz '+(i+1)+' Bandstärke" data-f="kg" data-ex="'+e.id+'" data-i="'+i+'" value="'+esc(s.kg)+'" placeholder="'+esc(phFor(e,prev,i,'kg')||'Band')+'"></div>'
+        : '<div class="fld none" aria-hidden="true"><input tabindex="-1"></div>';
+  var unitLbl=e.f2==='Wdh'?'Wdh':e.f2;
+  return '<div class="set'+(s.done?' isdone':'')+'" data-row="'+e.id+'-'+i+'"><span class="sn">'+(i+1)+'</span>'+f1+
+    '<span class="x">'+(e.f1?'×':'')+'</span>'+
+    '<div class="fld"><input inputmode="decimal" enterkeyhint="done" aria-label="Satz '+(i+1)+' '+(e.f2==='Wdh'?'Wiederholungen':e.f2==='s'?'Sekunden':'Meter')+'" data-f="val" data-ex="'+e.id+'" data-i="'+i+'" value="'+esc(s.val)+'" placeholder="'+esc(phFor(e,prev,i,'val'))+'"><span class="u">'+unitLbl+'</span></div>'+
+    '<button class="done" data-act="done" data-ex="'+e.id+'" data-i="'+i+'" aria-pressed="'+(s.done?'true':'false')+'" aria-label="Satz '+(i+1)+' erledigt">'+CHECK+'</button></div>';
+}
+function updateProgress(){
+  var d=db.draft, tot=0, dn=0; Object.keys(d.ex).forEach(function(k){ d.ex[k].forEach(function(s){tot++; if(s.done) dn++;}); });
+  document.getElementById('progressline').textContent=dn+' von '+tot+' Sätzen erledigt';
+  var b=document.getElementById('saveBtn'); b.disabled=dn===0; b.textContent=d.editingId?'Änderungen speichern':'Einheit '+d.unit+' speichern';
+}
+
+/* ---------- events: heute ---------- */
+var V=document.getElementById('v-heute');
+V.addEventListener('input',function(ev){
+  var t=ev.target;
+  if(t.id==='dNote'){ db.draft.note=t.value; save(); return; }
+  if(t.dataset&&t.dataset.f){ var s=db.draft.ex[t.dataset.ex][+t.dataset.i]; s[t.dataset.f]=t.value; save(); }
+});
+V.addEventListener('change',function(ev){
+  var t=ev.target;
+  if(t.id==='dDate'&&t.value){ db.draft.date=t.value; save(); renderHeute(); }
+});
+var discardArm=0;
+V.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act]'); if(!b) return; var act=b.dataset.act, d=db.draft;
+  if(act==='unit'){ var u=b.dataset.u; if(u===d.unit) return;
+    if(draftHasData(d)&&!d.editingId){ if(!b.dataset.armed){ b.dataset.armed='1'; toast('Nochmal tippen: Eingaben von Einheit '+d.unit+' gehen verloren.'); setTimeout(function(){delete b.dataset.armed;},3000); return; } }
+    var keepDate=d.date, eid=d.editingId; db.draft=newDraft(u,keepDate); db.draft.editingId=eid; save(); renderHeute(); return; }
+  if(act==='done'){ var e=EXBY[b.dataset.ex], i=+b.dataset.i, s=d.ex[e.id][i];
+    if(!s.done){ var row=b.closest('.set'), inputs=row.querySelectorAll('input[data-f]');
+      inputs.forEach(function(inp){ if(inp.value===''&&inp.placeholder&&inp.placeholder!=='Band'){ inp.value=inp.placeholder; s[inp.dataset.f]=inp.placeholder; } });
+      if(num(s.val)==null){ toast('Bitte zuerst '+(e.f2==='Wdh'?'die Wiederholungen':e.f2==='s'?'die Sekunden':'die Meter')+' eintragen.'); var vi=row.querySelector('input[data-f=val]'); if(vi) vi.focus(); return; }
+      s.done=true; save(); row.classList.add('isdone'); b.setAttribute('aria-pressed','true');
+      if(db.settings.autoRest) startTimer(db.settings.rest);
+    } else { s.done=false; save(); b.closest('.set').classList.remove('isdone'); b.setAttribute('aria-pressed','false'); }
+    var card=document.getElementById('card-'+e.id); card.classList.toggle('complete',d.ex[e.id].every(function(x){return x.done;}));
+    updateProgress(); return; }
+  if(act==='addSet'){ d.ex[b.dataset.ex].push({kg:'',val:'',done:false}); save(); rerenderCard(b.dataset.ex); return; }
+  if(act==='delSet'){ var arr=d.ex[b.dataset.ex]; if(arr.length>1){ arr.pop(); save(); rerenderCard(b.dataset.ex);} return; }
+  if(act==='discard'){ if(Date.now()-discardArm>3000){ discardArm=Date.now(); b.textContent='Wirklich verwerfen?'; setTimeout(function(){ if(b.isConnected) b.textContent='Eingaben verwerfen'; },3000); return; }
+    discardArm=0; db.draft=newDraft(suggestUnit(),today()); save(); renderHeute(); toast('Eingaben verworfen'); return; }
+  if(act==='cancelEdit'){ db.draft=newDraft(suggestUnit(),today()); save(); renderHeute(); return; }
+});
+function rerenderCard(id){ var c=document.getElementById('card-'+id); var tmp=document.createElement('div'); tmp.innerHTML=exCard(EXBY[id]); c.replaceWith(tmp.firstChild); updateProgress(); }
+
+document.getElementById('saveBtn').addEventListener('click',function(){
+  var d=db.draft, ex={}, any=false;
+  Object.keys(d.ex).forEach(function(k){ var sets=d.ex[k].filter(function(s){return s.done;}).map(function(s){return {kg:s.kg,val:s.val,done:true};}); if(sets.length){ex[k]=sets; any=true;} });
+  if(!any){ toast('Noch kein Satz abgehakt.'); return; }
+  var rec={id:d.editingId||uid(),date:d.date,unit:d.unit,note:d.note,ex:ex,savedAt:Date.now()};
+  if(d.editingId){ db.sessions=db.sessions.map(function(s){return s.id===d.editingId?rec:s;}); }
+  else db.sessions.push(rec);
+  var wasEdit=!!d.editingId;
+  db.draft=newDraft(rec.unit==='A'?'B':'A',today()); save(); stopTimer();
+  toast(wasEdit?'Änderungen gespeichert':'Einheit '+rec.unit+' gespeichert'); show('verlauf');
+});
+
+/* ---------- timer ---------- */
+var tEnd=0,tInt=null;
+function syncBar(){ document.getElementById('bar').hidden = current!=='heute' && document.getElementById('timer').hidden; }
+function startTimer(sec){ tEnd=Date.now()+sec*1000; document.getElementById('timer').hidden=false; syncBar(); tick(); clearInterval(tInt); tInt=setInterval(tick,250); }
+function stopTimer(){ clearInterval(tInt); tInt=null; document.getElementById('timer').hidden=true; syncBar(); }
+function tick(){ var r=Math.round((tEnd-Date.now())/1000), el=document.getElementById('timerT'), lb=document.getElementById('timerL');
+  var a=Math.abs(r); el.textContent=(r<0?'+':'')+Math.floor(a/60)+':'+pad(a%60); el.classList.toggle('over',r<=0); lb.textContent=r>0?'Pause':'Weiter geht’s';
+  if(r===0){ try{ if(navigator.vibrate) navigator.vibrate([200,100,200]); }catch(e){} }
+  if(r<-120) stopTimer(); }
+document.getElementById('timerStop').addEventListener('click',stopTimer);
+document.getElementById('timerPlus').addEventListener('click',function(){ tEnd+=15000; tick(); });
+
+/* ---------- render: verlauf ---------- */
+function renderVerlauf(){
+  var s=sortedSessions(), h='<h2 class="sec">Verlauf</h2>';
+  if(!s.length){ h+='<div class="empty">Noch keine gespeicherten Einheiten. Unter „Heute“ Sätze abhaken und speichern.</div>'; }
+  s.forEach(function(x){
+    var nSets=0; Object.keys(x.ex).forEach(function(k){nSets+=x.ex[k].length;});
+    var ph=phaseFor(x.date);
+    h+='<details class="sess"><summary><span class="badge">'+esc(x.unit)+'</span><span class="meta"><span class="d">'+esc(fmtDate(x.date))+'</span><br><span class="s">'+Object.keys(x.ex).length+' Übungen · '+nSets+' Sätze · '+esc(ph.name)+'</span></span></summary><div class="body">';
+    EX.forEach(function(e){ if(!x.ex[e.id]) return; h+='<div class="line"><span>'+e.no+' '+esc(e.name)+'</span><span class="v">'+x.ex[e.id].map(function(st){return esc(setText(e,st));}).join('<br>')+'</span></div>'; });
+    if(x.note) h+='<div class="note">'+esc(x.note)+'</div>';
+    h+='<div class="row" style="margin-top:6px"><button class="ghost" data-act="edit" data-id="'+x.id+'">Bearbeiten</button><button class="ghost danger" data-act="del" data-id="'+x.id+'">Löschen</button></div></div></details>';
+  });
+  document.getElementById('v-verlauf').innerHTML=h;
+}
+document.getElementById('v-verlauf').addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act]'); if(!b) return; var id=b.dataset.id, sess=db.sessions.filter(function(s){return s.id===id;})[0]; if(!sess) return;
+  if(b.dataset.act==='del'){
+    if(!b.dataset.armed){ b.dataset.armed='1'; b.textContent='Wirklich löschen?'; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent='Löschen'; } },3000); return; }
+    db.sessions=db.sessions.filter(function(s){return s.id!==id;}); save(); renderVerlauf(); toast('Einheit gelöscht'); return; }
+  if(b.dataset.act==='edit'){
+    if(draftHasData(db.draft)&&!db.draft.editingId&&!b.dataset.armed){ b.dataset.armed='1'; b.textContent='Offene Eingaben überschreiben?'; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent='Bearbeiten'; } },3000); return; }
+    var d={date:sess.date,unit:sess.unit,note:sess.note||'',ex:{},editingId:sess.id};
+    EX.filter(function(e){return e.u===sess.unit;}).forEach(function(e){ d.ex[e.id]=(sess.ex[e.id]||[]).map(function(s){return {kg:s.kg,val:s.val,done:true};}); if(!d.ex[e.id].length) d.ex[e.id]=[{kg:'',val:'',done:false}]; });
+    db.draft=d; save(); show('heute'); }
+});
+
+/* ---------- render: fortschritt ---------- */
+function metric(e,sets){ // best set of a session
+  var best=null; sets.forEach(function(s){ var v=num(s.val), k=num(s.kg); if(v==null) return;
+    var score = e.f1==='kg' && k!=null ? k*1000+v : v; if(!best||score>best.score) best={score:score,kg:k,val:v,raw:s}; }); return best; }
+function spark(pts){
+  if(pts.length<2) return '<svg class="spark" viewBox="0 0 132 44" aria-hidden="true"><line class="gd" x1="0" y1="43" x2="132" y2="43"/>'+(pts.length?'<circle class="dt" cx="66" cy="22" r="3.5"/>':'')+'</svg>';
+  var min=Math.min.apply(null,pts), max=Math.max.apply(null,pts); if(max===min){max+=1;min-=1;}
+  var xs=function(i){return 4+i*(124/(pts.length-1));}, ys=function(v){return 38-(v-min)/(max-min)*32;};
+  var d=pts.map(function(v,i){return (i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1);}).join(' ');
+  return '<svg class="spark" viewBox="0 0 132 44" aria-hidden="true"><line class="gd" x1="0" y1="43" x2="132" y2="43"/><path class="ar" d="'+d+' L'+xs(pts.length-1).toFixed(1)+' 43 L4 43 Z"/><path class="ln" d="'+d+'"/><circle class="dt" cx="'+xs(pts.length-1).toFixed(1)+'" cy="'+ys(pts[pts.length-1]).toFixed(1)+'" r="3.5"/></svg>';
+}
+function renderFortschritt(){
+  var s=sortedSessions(), now=new Date(), monday=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7));
+  var week=s.filter(function(x){return parseISO(x.date)>=monday;}).length;
+  var h='<h2 class="sec">Fortschritt</h2><div class="stats">'+
+    '<div class="stat"><div class="n">'+s.length+'</div><div class="k">Einheiten gesamt</div></div>'+
+    '<div class="stat"><div class="n">'+week+'</div><div class="k">diese Woche (Ziel 2–3)</div></div>'+
+    '<div class="stat"><div class="n">'+s.filter(function(x){return x.unit==='A';}).length+'/'+s.filter(function(x){return x.unit==='B';}).length+'</div><div class="k">A / B</div></div></div>';
+  var chron=s.slice().reverse(), anyEx=false;
+  ['A','B'].forEach(function(u){
+    var block='';
+    EX.filter(function(e){return e.u===u;}).forEach(function(e){
+      var hist=chron.filter(function(x){return x.ex[e.id];}).map(function(x){return {date:x.date,m:metric(e,x.ex[e.id])};}).filter(function(x){return x.m;});
+      if(!hist.length) return; anyEx=true;
+      var useKg = e.f1==='kg' && hist.some(function(x){return x.m.kg!=null&&x.m.kg>0;});
+      var pts=hist.slice(-10).map(function(x){return useKg?(x.m.kg||0):x.m.val;});
+      var best=hist.reduce(function(a,b){return b.m.score>a.m.score?b:a;});
+      block+='<div class="prog"><div><h3>'+e.no+' '+esc(e.name)+'</h3><div class="best">Bestwert: '+esc(setText(e,best.m.raw))+' ('+esc(fmtShort(best.date))+')</div><div class="s">'+hist.length+'× trainiert · Kurve: '+(useKg?'Gewicht':(e.f2==='Wdh'?'Wiederholungen':e.f2==='s'?'Sekunden':'Meter'))+', letzte '+pts.length+'</div></div>'+spark(pts)+'</div>';
+    });
+    if(block) h+='<h2 class="sec">Einheit '+u+'</h2>'+block;
+  });
+  if(!anyEx) h+='<div class="empty">Sobald du Einheiten gespeichert hast, siehst du hier pro Übung den Bestwert und den Verlauf.</div>';
+  document.getElementById('v-fortschritt').innerHTML=h;
+}
+
+/* ---------- render: daten ---------- */
+function toMarkdown(){
+  var s=sortedSessions().slice().reverse(), out='# Schulter-Prehab Log\n';
+  s.forEach(function(x){ out+='\n## '+x.date+' · Einheit '+x.unit+' ('+phaseFor(x.date).name+')\n';
+    EX.forEach(function(e){ if(!x.ex[e.id]) return; out+='- '+e.name+': '+x.ex[e.id].map(function(st){return setText(e,st);}).join(', ')+(e.side?' (pro Seite)':'')+'\n'; });
+    if(x.note) out+='\n> '+x.note.replace(/\n/g,'\n> ')+'\n'; });
+  return out;
+}
+function download(name,text,type){
+  var blob=new Blob([text],{type:type}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},1000);
+}
+function renderDaten(){
+  var n=db.sessions.length;
+  var h='<h2 class="sec">Daten</h2>'+
+  '<div class="panel"><p>Alle Einträge liegen nur in diesem Browser auf diesem Gerät. Es gibt keinen Server. <span id="persist"></span></p>'+
+  '<p>Auf dem iPhone: in Safari über Teilen → „Zum Home-Bildschirm“ hinzufügen und den Tracker immer von dort öffnen. Sonst kann Safari die Daten löschen, wenn die Seite länger als 7 Tage nicht geöffnet wurde.</p>'+
+  '<p><b>'+n+'</b> gespeicherte Einheiten'+(storageOK?'':' · <span class="bad">Speichern im Browser ist blockiert (privates Fenster?)</span>')+'</p></div>'+
+  '<div class="panel"><div class="lbl" style="margin-bottom:8px">Sicherung</div><p>Exportiere regelmäßig eine Sicherung, zum Beispiel einmal pro Woche in iCloud Drive. Mit „Importieren“ holst du sie auf ein neues Gerät.</p>'+
+  '<div class="btns"><button class="ghost" id="expJson">Sicherung exportieren (.json)</button><button class="ghost" id="impJsonBtn">Sicherung importieren</button><input type="file" id="impJson" accept="application/json,.json" hidden></div></div>'+
+  '<div class="panel"><div class="lbl" style="margin-bottom:8px">Obsidian</div><p>Der komplette Verlauf als Markdown, passend für eine Notiz in deinem Vault.</p>'+
+  '<div class="btns"><button class="ghost" id="copyMd">Markdown kopieren</button><button class="ghost" id="dlMd">Markdown herunterladen</button></div></div>'+
+  '<div class="panel"><div class="lbl" style="margin-bottom:8px">Pausen-Timer</div><div class="btns">'+
+  '<label class="row"><span>Pause</span><select id="restSel">'+[30,45,60,75,90,120].map(function(v){return '<option value="'+v+'"'+(db.settings.rest===v?' selected':'')+'>'+v+' s</option>';}).join('')+'</select></label>'+
+  '<label class="row"><input type="checkbox" id="autoRest"'+(db.settings.autoRest?' checked':'')+' style="width:20px;height:20px"> <span>Startet automatisch nach jedem Satz</span></label></div></div>'+
+  '<div class="panel"><div class="lbl" style="margin-bottom:8px">Zurücksetzen</div><p>Löscht alle Einheiten in diesem Browser. Exportiere vorher eine Sicherung.</p><button class="ghost danger" id="wipe">Alle Daten löschen</button></div>';
+  document.getElementById('v-daten').innerHTML=h;
+  try{ if(navigator.storage&&navigator.storage.persisted){ navigator.storage.persisted().then(function(p){ var el=document.getElementById('persist'); if(el) el.innerHTML=p?'<span class="ok">Dauerhafte Speicherung ist aktiv.</span>':''; }); } }catch(e){}
+  document.getElementById('expJson').onclick=function(){ download('schulter-prehab-'+today()+'.json',JSON.stringify({v:1,exportedAt:new Date().toISOString(),sessions:db.sessions},null,2),'application/json'); toast('Sicherung exportiert'); };
+  document.getElementById('impJsonBtn').onclick=function(){ document.getElementById('impJson').click(); };
+  document.getElementById('impJson').onchange=function(ev){ var f=ev.target.files[0]; if(!f) return; var r=new FileReader();
+    r.onload=function(){ try{ var d=JSON.parse(r.result); var arr=Array.isArray(d)?d:d.sessions; if(!Array.isArray(arr)) throw 0;
+      var have={}; db.sessions.forEach(function(s){have[s.id]=1;}); var added=0;
+      arr.forEach(function(s){ if(s&&s.id&&s.date&&s.unit&&s.ex&&!have[s.id]){ db.sessions.push(s); added++; } });
+      save(); renderDaten(); toast(added+' Einheiten importiert'); }catch(e){ toast('Die Datei ist keine gültige Sicherung.'); } };
+    r.readAsText(f); };
+  document.getElementById('copyMd').onclick=function(){ var md=toMarkdown();
+    try{ navigator.clipboard.writeText(md).then(function(){toast('Markdown kopiert');},function(){download('schulter-prehab-log.md',md,'text/markdown');}); }catch(e){ download('schulter-prehab-log.md',md,'text/markdown'); } };
+  document.getElementById('dlMd').onclick=function(){ download('schulter-prehab-log.md',toMarkdown(),'text/markdown'); };
+  document.getElementById('restSel').onchange=function(ev){ db.settings.rest=+ev.target.value; save(); toast('Pause: '+ev.target.value+' s'); };
+  document.getElementById('autoRest').onchange=function(ev){ db.settings.autoRest=ev.target.checked; save(); };
+  var wipeArm=0; document.getElementById('wipe').onclick=function(ev){ var b=ev.currentTarget;
+    if(Date.now()-wipeArm>4000){ wipeArm=Date.now(); b.textContent='Wirklich alles löschen? Nochmal tippen'; setTimeout(function(){ if(b.isConnected) b.textContent='Alle Daten löschen'; },4000); return; }
+    db=blank(); db.draft=newDraft('A',today()); save(); renderDaten(); toast('Alle Daten gelöscht'); };
+}
+
+function render(){ if(current==='heute') renderHeute(); else if(current==='verlauf') renderVerlauf(); else if(current==='fortschritt') renderFortschritt(); else renderDaten(); }
+
+/* other tabs/windows */
+window.addEventListener('storage',function(ev){ if(ev.key===KEY){ db=load(); if(!db.draft) db.draft=newDraft(suggestUnit(),today()); if(current!=='heute') render(); } });
+
+var startTab='heute'; try{ startTab=sessionStorage.getItem(KEY+'.tab')||'heute'; }catch(e){}
+show(startTab);
+
+if('serviceWorker' in navigator && location.protocol==='https:'){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+})();
+</script>
+</body>
+</html>
