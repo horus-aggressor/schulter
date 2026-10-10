@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="600" height="600">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C2410C"/></marker></defs>
+<rect width="300" height="300" fill="#F4F6F7"/>
+<ellipse cx="150" cy="150" rx="62" ry="26" fill="none" stroke="#12161A" stroke-width="8"/><circle cx="150" cy="146" r="21" fill="#12161A"/><circle cx="290" cy="148" r="8" fill="#8A96A1"/><line x1="290" y1="148" x2="272" y2="208" stroke="#8A96A1" stroke-width="3" stroke-linecap="round"/><line x1="210" y1="162" x2="272" y2="208" stroke="#C2410C" stroke-width="10" stroke-linecap="round"/><circle cx="210" cy="162" r="7" fill="#12161A"/><text x="20" y="282" font-family="Arial, sans-serif" font-size="15" fill="#4A5560">Ansicht von oben</text>
+</svg>

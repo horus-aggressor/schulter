@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="600" height="600">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C2410C"/></marker></defs>
+<rect width="300" height="300" fill="#F4F6F7"/>
+<line x1="15" y1="276" x2="285" y2="276" stroke="#8A96A1" stroke-width="3" stroke-linecap="round"/><line x1="70" y1="248" x2="236" y2="150" stroke="#8A96A1" stroke-width="12" stroke-linecap="round"/><line x1="96" y1="236" x2="96" y2="276" stroke="#8A96A1" stroke-width="6" stroke-linecap="round"/><line x1="214" y1="166" x2="214" y2="276" stroke="#8A96A1" stroke-width="6" stroke-linecap="round"/><polyline points="30,272 52,242 85,214" fill="none" stroke="#12161A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><line x1="85" y1="214" x2="207" y2="144" stroke="#12161A" stroke-width="9" stroke-linecap="round"/><line x1="207" y1="144" x2="207" y2="238" stroke="#C2410C" stroke-width="9" stroke-linecap="round"/><circle cx="207" cy="238" r="8" fill="#12161A"/><circle cx="233" cy="128" r="15" fill="#12161A"/>
+</svg>

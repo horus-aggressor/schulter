@@ -1,0 +1,562 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Schulter-Prehab Anleitung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: training manual. Sticky exercise index, then one section per exercise: looping clip + start/end stills beside the coaching text. */
+:root{
+  --bg:#ECEFF1; --surface:#FFFFFF; --ink:#12161A; --muted:#4A5560; --line:#C9D0D6; --accent:#C2410C; --tint:#E3E7EA;
+  --display:'Big Shoulders Display','Arial Narrow',sans-serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1317; --surface:#171D23; --ink:#E7EBEE; --muted:#9BA7B2; --line:#2B343D; --accent:#F28A4B; --tint:#1F262D; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0F1317; --surface:#171D23; --ink:#E7EBEE; --muted:#9BA7B2; --line:#2B343D; --accent:#F28A4B; --tint:#1F262D; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+a{color:inherit}
+a:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{text-wrap:balance}
+p,li{text-wrap:pretty}
+
+.hero{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:500}
+h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(56px,11vw,120px);line-height:.86;margin:10px 0 18px;letter-spacing:.005em}
+.lede{font-size:18px;max-width:62ch;margin:0;color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:16px;margin-top:28px}
+.facts div{border-top:1px solid var(--line);padding-top:8px}
+.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:2px 0 0;font-weight:600}
+
+.index{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.index .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:thin}
+.chip{flex:none;display:flex;align-items:center;gap:6px;text-decoration:none;font-size:13px;padding:6px 10px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.chip:hover{border-color:var(--ink)}
+.chip .num{font-family:var(--display);font-weight:800;font-size:17px;color:var(--accent);line-height:1}
+@media (max-width:720px){ .chipname{display:none} }
+
+.block{padding-block:40px 8px}
+.block h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:34px;line-height:1;margin:0 0 14px;letter-spacing:.01em}
+.block p{max-width:68ch}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--display);font-weight:800;font-size:22px;color:var(--accent);width:48px;line-height:1.1}
+td a{font-weight:600;text-decoration:none}
+td a:hover{text-decoration:underline}
+td .sub{font-size:13px;color:var(--muted)}
+td.mono,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.eq{color:var(--muted);font-size:14px}
+
+.blocks3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;margin-top:16px}
+.blocks3 > div{background:var(--surface);border:1px solid var(--line);padding:14px 16px}
+.blocks3 h3{margin:0 0 4px;font-size:15px}
+.blocks3 .mono{font-size:13px;color:var(--accent)}
+.blocks3 p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+
+.ex{padding-block:44px;border-top:1px solid var(--line);scroll-margin-top:64px}
+.exhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+.bignum{font-family:var(--display);font-weight:800;font-size:72px;line-height:.8;color:var(--accent);flex:none}
+.exhead h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(28px,4.4vw,42px);line-height:.95;margin:0;letter-spacing:.01em}
+.exhead .de{margin:6px 0 0;color:var(--muted);font-size:16px}
+.exgrid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:820px){ .exgrid{grid-template-columns:minmax(0,1fr)} .media{max-width:420px} }
+.media{display:flex;flex-direction:column;gap:8px;min-width:0}
+video{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--tint);display:block;border:1px solid var(--line)}
+.stills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stills.one{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+figure{margin:0;position:relative}
+figure img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border:1px solid var(--line)}
+figcaption{position:absolute;left:6px;top:6px;font-family:var(--mono);font-size:12px;line-height:1;padding:4px 6px;background:rgba(18,22,26,.82);color:#FFFFFF}
+.text{min-width:0}
+.text > p:first-of-type{margin-top:0}
+.dose{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 18px}
+.dose div{background:var(--surface);padding:10px 12px}
+.dose dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dose dd{margin:2px 0 0;font-family:var(--mono);font-weight:500;font-size:14px;font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.target{font-weight:500}
+.text h3{font-size:13px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:22px 0 6px;font-weight:500}
+.text p{margin:0 0 10px;max-width:66ch}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px;max-width:66ch}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px}
+ol.steps li::before{content:counter(s);font-family:var(--display);font-weight:800;font-size:22px;line-height:1.1;color:var(--ink)}
+ul.errs{margin:0;padding-left:20px;max-width:66ch}
+ul.errs li::marker{color:var(--accent)}
+.easier{margin-top:14px !important;padding:10px 12px;background:var(--tint)}
+
+.sep{flex:none;width:1px;background:var(--line);margin-inline:4px}
+.unitb{border-top:2px solid var(--ink);margin-top:20px}
+.unith{font-size:clamp(48px,8vw,84px) !important;line-height:.88 !important;margin-top:8px !important}
+.stills.sketch figure img{aspect-ratio:1/1}
+.media.sk{gap:0}
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:8px;margin-top:16px}
+.prog div{background:var(--surface);border:1px solid var(--line);padding:12px 14px}
+.prog .w{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.prog .p{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:24px;line-height:1;margin:2px 0 6px}
+.prog .d{font-size:14px;color:var(--ink);margin:0}
+.prog .now{border-color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+
+.safety{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px;margin-top:16px}
+.safety div{background:var(--surface);border:1px solid var(--line);padding:14px 16px}
+.safety h3{margin:0 0 6px;font-size:15px}
+.safety ul{margin:0;padding-left:18px;font-size:15px}
+footer.foot{padding-block:36px 56px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);margin-top:40px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Winter Arc 2026 · Verletzungsprophylaxe</div>
+    <h1>Schulter-Prehab</h1>
+    <p class="lede">Neun Übungen aus den Instagram-Clips, in der gezeigten Reihenfolge. Sie stärken die Rotatorenmanschette, schulen die Kontrolle des Schulterblatts und halten die Brustwirbelsäule beweglich. Leichte Gewichte, saubere Technik, langsam ablassen. Dazu kommt Einheit B mit fünf Ergänzungen, im Wechsel mit A.</p>
+    <dl class="facts">
+      <div><dt>Frequenz</dt><dd>2–3× pro Woche</dd></div>
+      <div><dt>Dauer</dt><dd>≈ 25 Minuten</dd></div>
+      <div><dt>Pause</dt><dd>30–60 s</dd></div>
+      <div><dt>Intensität</dt><dd>RPE 6–7</dd></div>
+      <div><dt>Geräte</dt><dd>Kurzhanteln, Kabelzug, Band, Stange</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="index" aria-label="Übungen">
+  <div class="wrap"><a href="#u1" class="chip"><span class="num">01</span><span class="chipname">Seated DB Abducted External Rotation</span></a><a href="#u2" class="chip"><span class="num">02</span><span class="chipname">Bench Supported DB Overhead Y Press</span></a><a href="#u3" class="chip"><span class="num">03</span><span class="chipname">Cable Abducted External Rotation</span></a><a href="#u4" class="chip"><span class="num">04</span><span class="chipname">Two Rope Face Pull</span></a><a href="#u5" class="chip"><span class="num">05</span><span class="chipname">Scap Pull-ups (Neutral Grip)</span></a><a href="#u6" class="chip"><span class="num">06</span><span class="chipname">Cable External Rotation</span></a><a href="#u7" class="chip"><span class="num">07</span><span class="chipname">Push-ups Position T-spine Rotations</span></a><a href="#u8" class="chip"><span class="num">08</span><span class="chipname">Supinated Band Pull Apart</span></a><a href="#u9" class="chip"><span class="num">09</span><span class="chipname">Dead Hang (Neutral Grip)</span></a><span class="sep" aria-hidden="true"></span><a href="#b1" class="chip"><span class="num">B1</span><span class="chipname">Push-up Plus</span></a><a href="#b2" class="chip"><span class="num">B2</span><span class="chipname">Cable Internal Rotation</span></a><a href="#b3" class="chip"><span class="num">B3</span><span class="chipname">Prone Y-T Raise</span></a><a href="#b4" class="chip"><span class="num">B4</span><span class="chipname">Bottoms-up Kettlebell Carry</span></a><a href="#b5" class="chip"><span class="num">B5</span><span class="chipname">Open Book</span></a></div>
+</nav>
+
+<main>
+  <section class="block">
+    <div class="wrap">
+      <h2>Der Plan</h2>
+      <p>Die Clips zeigen nur die Ausführung. Sätze, Wiederholungen und Progression sind hier als Startpunkt ergänzt. Wähle das Gewicht so, dass am Satzende noch 3–4 saubere Wiederholungen möglich wären (RPE 6–7). Bei den Rotationsübungen gilt: lieber zu leicht als zu schwer.</p>
+      <div class="tablebox">
+        <table>
+          <thead><tr><th>#</th><th>Übung</th><th>Sätze × Wdh</th><th>Geräte</th></tr></thead>
+          <tbody><tr><td class="num">01</td><td><a href="#u1">Seated DB Abducted External Rotation</a><div class="sub">Außenrotation sitzend, Ellbogen auf dem Knie</div></td><td class="mono">2–3 × 12–15 pro Seite</td><td class="eq">Kurzhantel, Bank</td></tr><tr><td class="num">02</td><td><a href="#u2">Bench Supported DB Overhead Y Press</a><div class="sub">Y-Drücken sitzend auf der Bank</div></td><td class="mono">2–3 × 10–12</td><td class="eq">Kurzhanteln, Bank</td></tr><tr><td class="num">03</td><td><a href="#u3">Cable Abducted External Rotation</a><div class="sub">Kabel-Außenrotation, Arm 90° abgespreizt</div></td><td class="mono">2–3 × 12–15 pro Seite</td><td class="eq">Kabelzug, Einzelgriff</td></tr><tr><td class="num">04</td><td><a href="#u4">Two Rope Face Pull</a><div class="sub">Face Pull mit zwei Seilen</div></td><td class="mono">3 × 12–15</td><td class="eq">Kabelzug, 2 Seile</td></tr><tr><td class="num">05</td><td><a href="#u5">Scap Pull-ups (Neutral Grip)</a><div class="sub">Schulterblatt-Klimmzug im Neutralgriff</div></td><td class="mono">2–3 × 8–10</td><td class="eq">Klimmzugstange mit Neutralgriffen</td></tr><tr><td class="num">06</td><td><a href="#u6">Cable External Rotation</a><div class="sub">Kabel-Außenrotation, Ellbogen am Körper</div></td><td class="mono">2–3 × 12–15 pro Seite</td><td class="eq">Kabelzug, Einzelgriff, optional Handtuch</td></tr><tr><td class="num">07</td><td><a href="#u7">Push-ups Position T-spine Rotations</a><div class="sub">Brustwirbelsäulen-Rotation im Liegestütz</div></td><td class="mono">2 × 6–8 pro Seite</td><td class="eq">Boden</td></tr><tr><td class="num">08</td><td><a href="#u8">Supinated Band Pull Apart</a><div class="sub">Band auseinanderziehen im Untergriff</div></td><td class="mono">2–3 × 15–20</td><td class="eq">leichtes Widerstandsband</td></tr><tr><td class="num">09</td><td><a href="#u9">Dead Hang (Neutral Grip)</a><div class="sub">Passives Hängen im Neutralgriff</div></td><td class="mono">2–3 × 20–45 s</td><td class="eq">Klimmzugstange mit Neutralgriffen</td></tr></tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:36px">Drei Arten, Einheit A zu trainieren</h2>
+      <div class="blocks3">
+        <div>
+          <h3>Komplette Einheit</h3>
+          <div class="mono">≈ 25 min · alle 9 Übungen</div>
+          <p>Übung für Übung, alle Sätze, dann die nächste. Gut an trainingsfreien Tagen oder nach einem Oberkörper-Training.</p>
+        </div>
+        <div>
+          <h3>Zirkel in drei Blöcken</h3>
+          <div class="mono">≈ 18 min · 2–3 Runden je Block</div>
+          <p>Block A: 01 · 02 · 03. Block B: 04 · 05 · 06. Block C: 07 · 08 · 09. Innerhalb eines Blocks ohne Pause wechseln, nach jeder Runde 60 s Pause.</p>
+        </div>
+        <div>
+          <h3>Kurzversion als Warm-up</h3>
+          <div class="mono">≈ 8 min · 05 · 07 · 08 · 09</div>
+          <p>Nur Stange, Band und Boden. Je 1–2 Sätze vor Push- oder Pull-Tagen, oder als Mindeststandard an vollen Tagen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+<section class="ex" id="u1">
+<header class="exhead"><span class="bignum">01</span><div><h2>Seated DB Abducted External Rotation</h2><p class="de">Außenrotation sitzend, Ellbogen auf dem Knie</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip1.mp4" poster="e1_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Seated DB Abducted External Rotation"></video>
+<div class="stills"><figure><img src="e1_a.jpg" alt="Seated DB Abducted External Rotation, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e1_b.jpg" alt="Seated DB Abducted External Rotation, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 12–15 pro Seite</dd></div>
+<div><dt>Last</dt><dd>2–6 kg</dd></div>
+<div><dt>Tempo</dt><dd>1 s hoch · 1 s halten · 3 s ab</dd></div>
+<div><dt>Geräte</dt><dd>Kurzhantel, Bank</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Infraspinatus, Teres minor, hinterer Deltoid</p>
+<p>Stärkt die Außenrotatoren bei abgespreiztem Arm. Genau in dieser Position wird die Schulter beim Bankdrücken, Überkopfdrücken und Werfen belastet. Das Knie fixiert den Oberarm, so arbeitet nur die Rotation.</p>
+<h3>Setup</h3><p>Seitlich auf die Bank setzen und das Bein der Arbeitsseite aufstellen, bis das Knie etwa auf Schulterhöhe ist. Ellbogen auf das Knie legen, 90° gebeugt, Oberarm leicht vor der Körperlinie. Die freie Hand stützt auf der Bank.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Unterarm nach vorn-unten geneigt, Hantel knapp unter Ellbogenhöhe.</li><li>Unterarm nach oben drehen, bis er senkrecht steht oder leicht dahinter. Der Ellbogen bleibt auf dem Knie.</li><li>Oben 1 s halten, dann in 3 s kontrolliert zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Oberkörper lehnt sich zurück, um die Hantel hochzubringen</li><li>Schulter zieht Richtung Ohr</li><li>Zu schwer gewählt, die Bewegung kommt aus Schwung</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Ohne Gewicht oder mit leichtem Band beginnen.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u2">
+<header class="exhead"><span class="bignum">02</span><div><h2>Bench Supported DB Overhead Y Press</h2><p class="de">Y-Drücken sitzend auf der Bank</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip2.mp4" poster="e2_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Bench Supported DB Overhead Y Press"></video>
+<div class="stills"><figure><img src="e2_a.jpg" alt="Bench Supported DB Overhead Y Press, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e2_b.jpg" alt="Bench Supported DB Overhead Y Press, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 10–12</dd></div>
+<div><dt>Last</dt><dd>3–8 kg</dd></div>
+<div><dt>Tempo</dt><dd>2 s hoch · 2–3 s ab</dd></div>
+<div><dt>Geräte</dt><dd>Kurzhanteln, Bank</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Unterer und mittlerer Trapez, Serratus anterior, Deltoid</p>
+<p>Trainiert die Aufwärtsrotation des Schulterblatts über Kopf. Die Y-Bahn liegt in der Schulterblattebene, etwa 30° vor dem Körper. Das ist für die Schulter angenehmer als ein Drücken direkt seitlich.</p>
+<h3>Setup</h3><p>Aufrecht auf die Bank setzen (Lehne senkrecht, falls vorhanden), Füße fest am Boden, Rippen unten, Bauch leicht angespannt. Hanteln auf Schulterhöhe, Handflächen nach vorn.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Hanteln neben den Schultern, Ellbogen unter den Händen.</li><li>Schräg nach oben-außen in ein Y drücken. Am Ende dürfen die Schulterblätter mit nach oben rotieren.</li><li>Langsam zurück bis Schulterhöhe.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Hohlkreuz, um die Hanteln hochzubringen</li><li>Hanteln über dem Kopf zusammenführen statt Y</li><li>Ellbogen rutschen hinter die Hände</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Nur einen Arm abwechselnd oder ganz ohne Gewicht.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u3">
+<header class="exhead"><span class="bignum">03</span><div><h2>Cable Abducted External Rotation</h2><p class="de">Kabel-Außenrotation, Arm 90° abgespreizt</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip3.mp4" poster="e3_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Cable Abducted External Rotation"></video>
+<div class="stills"><figure><img src="e3_a.jpg" alt="Cable Abducted External Rotation, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e3_b.jpg" alt="Cable Abducted External Rotation, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 12–15 pro Seite</dd></div>
+<div><dt>Last</dt><dd>leichteste Stufe</dd></div>
+<div><dt>Tempo</dt><dd>1 s hoch · 1 s halten · 3 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Kabelzug, Einzelgriff</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Infraspinatus, Teres minor</p>
+<p>Die gleiche 90/90-Position wie Übung 1, aber mit konstanter Spannung über die ganze Bewegung. Das Kabel zieht auch oben noch, wo die Hantel kaum Last gibt.</p>
+<h3>Setup</h3><p>Rolle etwa auf Brust- bis Schulterhöhe, Einzelgriff. Gesicht zum Turm, einen Schritt zurück. Oberarm seitlich auf Schulterhöhe, Ellbogen 90°, Unterarm zeigt nach vorn zur Rolle.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Unterarm waagerecht nach vorn, Spannung auf dem Kabel.</li><li>Unterarm nach oben drehen bis senkrecht. Der Oberarm bleibt wie auf einer Stange liegend fixiert.</li><li>Kurz halten, in 3 s zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Ellbogen sinkt während der Bewegung ab</li><li>Rumpf dreht mit</li><li>Schulter zieht nach oben</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Mit Band statt Kabel, oder Ellbogen an einer Wand abstützen.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u4">
+<header class="exhead"><span class="bignum">04</span><div><h2>Two Rope Face Pull</h2><p class="de">Face Pull mit zwei Seilen</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip4.mp4" poster="e4_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Two Rope Face Pull"></video>
+<div class="stills"><figure><img src="e4_a.jpg" alt="Two Rope Face Pull, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e4_b.jpg" alt="Two Rope Face Pull, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>3 × 12–15</dd></div>
+<div><dt>Last</dt><dd>moderat, RPE 7</dd></div>
+<div><dt>Tempo</dt><dd>1 s ziehen · 1 s halten · 2 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Kabelzug, 2 Seile</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Hinterer Deltoid, mittlerer und unterer Trapez, Rhomboiden, Außenrotatoren</p>
+<p>Kombiniert Zug nach hinten mit Außenrotation. Zwei einzelne Seile erlauben mehr Bewegung als ein Seil: die Hände können weiter auseinander und am Ende hinter die Ohren drehen.</p>
+<h3>Setup</h3><p>Rolle über Kopfhöhe, in jede Hand ein Seil. Einen Schritt zurück, stabil stehen, Arme gestreckt Richtung Rolle.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Arme lang nach vorn-oben, Schulterblätter dürfen nach vorn gleiten.</li><li>Ellbogen hoch und weit führen und Richtung Stirn ziehen.</li><li>Am Ende die Hände nach hinten-oben drehen, bis sie neben oder hinter den Ohren sind. 1 s halten, kontrolliert zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Zurücklehnen und mit dem Körpergewicht ziehen</li><li>Ellbogen fallen unter die Hände, es wird ein Rudern</li><li>Zu schwer, die Außenrotation am Ende fehlt</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Mit einem Seil oder einem Band an einer Stange.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u5">
+<header class="exhead"><span class="bignum">05</span><div><h2>Scap Pull-ups (Neutral Grip)</h2><p class="de">Schulterblatt-Klimmzug im Neutralgriff</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip5.mp4" poster="e5_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Scap Pull-ups (Neutral Grip)"></video>
+<div class="stills"><figure><img src="e5_a.jpg" alt="Scap Pull-ups (Neutral Grip), Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e5_b.jpg" alt="Scap Pull-ups (Neutral Grip), Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 8–10</dd></div>
+<div><dt>Last</dt><dd>Körpergewicht</dd></div>
+<div><dt>Tempo</dt><dd>1 s hoch · 1–2 s halten · 2 s ab</dd></div>
+<div><dt>Geräte</dt><dd>Klimmzugstange mit Neutralgriffen</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Unterer Trapez, Latissimus, Schulterblatt-Kontrolle</p>
+<p>Lehrt, das Schulterblatt nach unten und hinten zu ziehen, bevor die Arme arbeiten. Das ist die Grundlage für saubere Klimmzüge. Der Neutralgriff (Handflächen zueinander) ist für viele Schultern angenehmer.</p>
+<h3>Setup</h3><p>Neutralgriffe etwa schulterbreit fassen und in den passiven Hang gehen: Arme gestreckt, Schultern Richtung Ohren.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: passiver Hang, Körper lang.</li><li>Mit gestreckten Armen die Schulterblätter nach unten und leicht zusammen ziehen. Die Brust hebt sich, der Körper steigt 3–5 cm.</li><li>1–2 s halten, langsam zurück in den passiven Hang.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Arme beugen, es wird ein Mini-Klimmzug</li><li>Schwung aus den Beinen</li><li>Hohlkreuz statt Bewegung im Schulterblatt</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Füße auf einer Box oder am Boden lassen und Gewicht abgeben.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u6">
+<header class="exhead"><span class="bignum">06</span><div><h2>Cable External Rotation</h2><p class="de">Kabel-Außenrotation, Ellbogen am Körper</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip6.mp4" poster="e6_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Cable External Rotation"></video>
+<div class="stills"><figure><img src="e6_a.jpg" alt="Cable External Rotation, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e6_b.jpg" alt="Cable External Rotation, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 12–15 pro Seite</dd></div>
+<div><dt>Last</dt><dd>leichteste Stufe</dd></div>
+<div><dt>Tempo</dt><dd>1 s raus · 1 s halten · 3 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Kabelzug, Einzelgriff, optional Handtuch</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Infraspinatus, Teres minor</p>
+<p>Der Klassiker für die Rotatorenmanschette in neutraler Armposition. Gut verträglich und leicht zu steigern.</p>
+<h3>Setup</h3><p>Rolle auf Ellbogenhöhe. Seitlich zum Turm stellen und mit dem turmfernen Arm greifen. Ellbogen 90° an der Seite, optional ein gerolltes Handtuch zwischen Ellbogen und Rumpf klemmen. Unterarm startet vor dem Bauch.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Hand vor dem Bauchnabel, Kabel leicht gespannt.</li><li>Unterarm nach außen drehen, so weit es geht, ohne dass der Ellbogen wegdriftet (meist 60–90°).</li><li>Kurz halten, in 3 s zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Ellbogen wandert vom Körper weg</li><li>Handgelenk knickt ab</li><li>Oberkörper dreht mit</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Mit Band an einem Türrahmen oder Rack.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u7">
+<header class="exhead"><span class="bignum">07</span><div><h2>Push-ups Position T-spine Rotations</h2><p class="de">Brustwirbelsäulen-Rotation im Liegestütz</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip7.mp4" poster="e7_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Push-ups Position T-spine Rotations"></video>
+<div class="stills"><figure><img src="e7_a.jpg" alt="Push-ups Position T-spine Rotations, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e7_b.jpg" alt="Push-ups Position T-spine Rotations, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2 × 6–8 pro Seite</dd></div>
+<div><dt>Last</dt><dd>Körpergewicht</dd></div>
+<div><dt>Tempo</dt><dd>2 s aufdrehen · 1 s halten · 2 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Boden</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Brustwirbelsäule (Mobilität), Serratus und Rotatorenmanschette des Stützarms</p>
+<p>Eine steife Brustwirbelsäule zwingt die Schulter, fehlende Beweglichkeit auszugleichen. Die Übung mobilisiert die Rotation und trainiert gleichzeitig den Stützarm.</p>
+<h3>Setup</h3><p>Hoher Liegestütz, Hände unter den Schultern, Füße hüftbreit. Breitere Füße geben mehr Stabilität.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: stabiler Liegestütz, Körper in einer Linie.</li><li>Gewicht auf eine Hand, die andere Hand löst sich. Brust zur Seite aufdrehen, Arm Richtung Decke, Blick folgt der Hand. Die Füße dürfen auf die Seite kippen.</li><li>Kurz halten, zurück in den Liegestütz, Seite wechseln.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Hüfte sackt durch</li><li>Stützschulter hängt, statt den Boden aktiv wegzudrücken</li><li>Drehung nur aus dem Arm statt aus der Brust</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Aus dem Kniestütz oder mit Händen auf einer Bank.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u8">
+<header class="exhead"><span class="bignum">08</span><div><h2>Supinated Band Pull Apart</h2><p class="de">Band auseinanderziehen im Untergriff</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip8.mp4" poster="e8_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Supinated Band Pull Apart"></video>
+<div class="stills"><figure><img src="e8_a.jpg" alt="Supinated Band Pull Apart, Startposition" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="e8_b.jpg" alt="Supinated Band Pull Apart, Endposition" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 15–20</dd></div>
+<div><dt>Last</dt><dd>leichtes Band</dd></div>
+<div><dt>Tempo</dt><dd>1 s ziehen · 1 s halten · 2 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>leichtes Widerstandsband</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Hinterer Deltoid, Rhomboiden, mittlerer Trapez, Außenrotatoren</p>
+<p>Der Untergriff (Handflächen nach oben) bringt mehr Außenrotation in die Bewegung als der normale Pull Apart. Gut für zu Hause und als Warm-up.</p>
+<h3>Setup</h3><p>Band etwa schulterbreit im Untergriff fassen. Arme vor dem Körper auf Schulterhöhe, Ellbogen fast gestreckt. Aufrecht stehen, Rippen unten.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Arme vorn, Band leicht gespannt.</li><li>Band auseinanderziehen, bis es die Brust berührt. Schulterblätter zusammen und nach unten.</li><li>1 s halten, langsam zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Schultern ziehen hoch</li><li>Hohlkreuz am Ende der Bewegung</li><li>Ellbogen stark gebeugt</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Hände weiter auseinander greifen oder ein leichteres Band nehmen.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="u9">
+<header class="exhead"><span class="bignum">09</span><div><h2>Dead Hang (Neutral Grip)</h2><p class="de">Passives Hängen im Neutralgriff</p></div></header>
+<div class="exgrid">
+<div class="media">
+<video src="clip9.mp4" poster="e9_a.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: Dead Hang (Neutral Grip)"></video>
+<div class="stills"><figure><img src="e9_a.jpg" alt="Dead Hang (Neutral Grip), Haltung" loading="lazy"><figcaption>Haltung</figcaption></figure><figure><img src="e9_b.jpg" alt="Dead Hang (Neutral Grip), Griff im Detail" loading="lazy"><figcaption>Griff</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 20–45 s</dd></div>
+<div><dt>Last</dt><dd>Körpergewicht</dd></div>
+<div><dt>Tempo</dt><dd>ruhig halten</dd></div>
+<div><dt>Geräte</dt><dd>Klimmzugstange mit Neutralgriffen</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Dehnung von Latissimus und Schulterkapsel, Griffkraft, Toleranz über Kopf</p>
+<p>Entlastet und dehnt die Schulter nach der Arbeit davor und verbessert die Toleranz für Positionen über Kopf. Ein ruhiger Abschluss der Einheit.</p>
+<h3>Setup</h3><p>Neutralgriffe fassen, Füße lösen oder bei Bedarf leicht am Boden lassen.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Passiv hängen: Schultern dürfen Richtung Ohren gleiten, Körper lang.</li><li>Ruhig durch die Nase atmen, Bauch locker.</li><li>Zum Ende mit den Füßen abstützen und kontrolliert absteigen.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Luft anhalten</li><li>Schwingen</li><li>Abrupt fallen lassen</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Füße am Boden lassen und nur einen Teil des Gewichts abgeben.</p>
+</div>
+</div>
+</section>
+  </div>
+
+  <section class="block unitb" id="einheit-b">
+    <div class="wrap">
+      <div class="eyebrow">Ergänzung</div>
+      <h2 class="unith">Einheit B</h2>
+      <p>Einheit A deckt die Außenrotation dreimal ab. Diese fünf Übungen füllen die Lücken: Serratus anterior, Innenrotation, unterer Trapez ohne Schwung, Stabilität unter Last und Rotation der Brustwirbelsäule. Zu diesen Übungen gibt es keine Clips, deshalb zeigen Skizzen Start und Ende.</p>
+      <dl class="facts">
+        <div><dt>Dauer</dt><dd>≈ 15 Minuten</dd></div>
+        <div><dt>Ungerade Wochen</dt><dd>A · B · A</dd></div>
+        <div><dt>Gerade Wochen</dt><dd>B · A · B</dd></div>
+        <div><dt>Geräte</dt><dd>Boden, Kabelzug, Schrägbank, Kettlebell</dd></div>
+      </dl>
+      <div class="tablebox" style="margin-top:24px">
+        <table>
+          <thead><tr><th>#</th><th>Übung</th><th>Sätze × Wdh</th><th>Geräte</th></tr></thead>
+          <tbody><tr><td class="num">B1</td><td><a href="#b1">Push-up Plus</a><div class="sub">Liegestütz mit Schulterblatt-Schub</div></td><td class="mono">2–3 × 10–12</td><td class="eq">Boden</td></tr><tr><td class="num">B2</td><td><a href="#b2">Cable Internal Rotation</a><div class="sub">Kabel-Innenrotation, Ellbogen am Körper</div></td><td class="mono">2–3 × 12–15 pro Seite</td><td class="eq">Kabelzug, Einzelgriff, optional Handtuch</td></tr><tr><td class="num">B3</td><td><a href="#b3">Prone Y-T Raise</a><div class="sub">Y- und T-Heben in Bauchlage</div></td><td class="mono">2–3 × 8–10 je Form</td><td class="eq">Schrägbank 30°, leichte Kurzhanteln</td></tr><tr><td class="num">B4</td><td><a href="#b4">Bottoms-up Kettlebell Carry</a><div class="sub">Kettlebell kopfüber tragen</div></td><td class="mono">3 × 20–30 m pro Seite</td><td class="eq">Kettlebell</td></tr><tr><td class="num">B5</td><td><a href="#b5">Open Book</a><div class="sub">Brustwirbelsäulen-Rotation in Seitenlage</div></td><td class="mono">2 × 8 pro Seite</td><td class="eq">Boden, Kissen</td></tr></tbody>
+        </table>
+      </div>
+      <p style="margin-top:16px">Wenig Zeit: B1 und B5 passen als Warm-up zur Kurzversion von Einheit A. Für die Steigerung gelten dieselben Phasen wie bei Einheit A.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+<section class="ex" id="b1">
+<header class="exhead"><span class="bignum">B1</span><div><h2>Push-up Plus</h2><p class="de">Liegestütz mit Schulterblatt-Schub</p></div></header>
+<div class="exgrid">
+<div class="media sk">
+<div class="stills sketch"><figure><img src="b1_a.svg" alt="Push-up Plus, Skizze Start" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="b1_b.svg" alt="Push-up Plus, Skizze Ende" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 10–12</dd></div>
+<div><dt>Last</dt><dd>Körpergewicht</dd></div>
+<div><dt>Tempo</dt><dd>1 s drücken · 1 s halten · 2 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Boden</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Serratus anterior</p>
+<p>Der Serratus hält das Schulterblatt am Brustkorb und dreht es beim Überkopfarbeiten mit. Ist er schwach, steht das Schulterblatt ab und der Raum unter dem Schulterdach wird enger. Einheit A trainiert ihn nur nebenbei.</p>
+<h3>Setup</h3><p>Hoher Liegestütz, Hände unter den Schultern, Arme gestreckt, Körper in einer Linie.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Brust zwischen die Schultern sinken lassen. Die Arme bleiben gestreckt, nur die Schulterblätter gehen zusammen.</li><li>Boden kräftig wegdrücken, bis der obere Rücken rund wird und die Schulterblätter nach vorn-außen gleiten.</li><li>1 s halten, langsam zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Ellbogen beugen, es wird ein Mini-Liegestütz</li><li>Hüfte sackt durch oder geht hoch</li><li>Kopf hängt nach unten</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> An der Wand oder im Kniestütz. Schwerer: auf den Unterarmen oder mit Gewichtsweste.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="b2">
+<header class="exhead"><span class="bignum">B2</span><div><h2>Cable Internal Rotation</h2><p class="de">Kabel-Innenrotation, Ellbogen am Körper</p></div></header>
+<div class="exgrid">
+<div class="media sk">
+<div class="stills sketch"><figure><img src="b2_a.svg" alt="Cable Internal Rotation, Skizze Start" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="b2_b.svg" alt="Cable Internal Rotation, Skizze Ende" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 12–15 pro Seite</dd></div>
+<div><dt>Last</dt><dd>leichte bis mittlere Stufe</dd></div>
+<div><dt>Tempo</dt><dd>1 s rein · 1 s halten · 3 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Kabelzug, Einzelgriff, optional Handtuch</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Subscapularis, vorderer Teil der Rotatorenmanschette</p>
+<p>Das Gegenstück zu den drei Außenrotationen aus Einheit A. Der Subscapularis ist der größte Muskel der Rotatorenmanschette und stabilisiert den Oberarmkopf von vorn.</p>
+<h3>Setup</h3><p>Rolle auf Ellbogenhöhe. Seitlich zum Turm stellen und mit dem turmnahen Arm greifen. Ellbogen 90° an der Seite, optional ein Handtuch zwischen Ellbogen und Rumpf. Der Unterarm startet nach außen gedreht.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Unterarm zeigt schräg nach außen Richtung Rolle, Kabel gespannt.</li><li>Unterarm vor den Bauch drehen. Der Ellbogen bleibt am Körper.</li><li>Kurz halten, in 3 s zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Rumpf dreht mit</li><li>Ellbogen löst sich vom Körper</li><li>Schulter rollt nach vorn</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Mit Band an einem Türrahmen oder Rack.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="b3">
+<header class="exhead"><span class="bignum">B3</span><div><h2>Prone Y-T Raise</h2><p class="de">Y- und T-Heben in Bauchlage</p></div></header>
+<div class="exgrid">
+<div class="media sk">
+<div class="stills sketch"><figure><img src="b3_a.svg" alt="Prone Y-T Raise, Skizze Start" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="b3_b.svg" alt="Prone Y-T Raise, Skizze Ende" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2–3 × 8–10 je Form</dd></div>
+<div><dt>Last</dt><dd>0–2 kg</dd></div>
+<div><dt>Tempo</dt><dd>2 s heben · 2 s halten · 2 s ab</dd></div>
+<div><dt>Geräte</dt><dd>Schrägbank 30°, leichte Kurzhanteln</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Unterer Trapez (Y), mittlerer Trapez und hinterer Deltoid (T)</p>
+<p>In Bauchlage fallen Schwung und Hohlkreuz weg. Der untere Trapez zieht das Schulterblatt nach unten und dreht es über Kopf mit. Das ergänzt das Y-Drücken und die Face Pulls aus Einheit A.</p>
+<h3>Setup</h3><p>Mit der Brust auf eine Schrägbank (etwa 30°) legen, Füße am Boden. Die Arme hängen gestreckt nach unten, die Daumen zeigen nach vorn.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Arme hängen locker, Schultern weg von den Ohren.</li><li>Y: die gestreckten Arme schräg nach vorn-oben neben den Kopf heben, Daumen zur Decke. Zuerst die Schulterblätter nach unten und hinten ziehen.</li><li>2 s halten, langsam absenken. Im nächsten Satz T: Arme seitlich auf Schulterhöhe heben.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Kopf in den Nacken legen</li><li>Schultern ziehen zu den Ohren</li><li>Zu schwer, die Arme schwingen</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Ohne Gewicht oder mit gebeugten Ellbogen.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="b4">
+<header class="exhead"><span class="bignum">B4</span><div><h2>Bottoms-up Kettlebell Carry</h2><p class="de">Kettlebell kopfüber tragen</p></div></header>
+<div class="exgrid">
+<div class="media sk">
+<div class="stills sketch"><figure><img src="b4_a.svg" alt="Bottoms-up Kettlebell Carry, Skizze Griff" loading="lazy"><figcaption>Griff</figcaption></figure><figure><img src="b4_b.svg" alt="Bottoms-up Kettlebell Carry, Skizze Gehen" loading="lazy"><figcaption>Gehen</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>3 × 20–30 m pro Seite</dd></div>
+<div><dt>Last</dt><dd>6–12 kg</dd></div>
+<div><dt>Tempo</dt><dd>langsam gehen</dd></div>
+<div><dt>Geräte</dt><dd>Kettlebell</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Rotatorenmanschette (reflexiv), Griffkraft, Rumpf</p>
+<p>Die kopfüber gehaltene Kugel kippt bei jeder Unruhe. Die Schulter muss dauernd und reflexartig nachstabilisieren, wie bei unerwarteten Lasten im Alltag und im Sport. Einheit A trainiert vor allem kontrollierte Bewegungen.</p>
+<h3>Setup</h3><p>Kettlebell am Griff kopfüber halten, die Kugel zeigt nach oben. Faust maximal fest, Unterarm senkrecht, Ellbogen etwa 90° vor dem Körper, Oberarm nah am Rumpf.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Kettlebell in die Kopfüber-Position bringen und die Faust fest schließen.</li><li>Langsam gehen, aufrecht bleiben, die Kugel ruhig halten.</li><li>Nach der Strecke kontrolliert abstellen, Seite wechseln.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Kugel kippt: Griff wird lockerer statt fester</li><li>Schulter zieht hoch</li><li>Oberkörper lehnt zur Seite</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Leichtere Kettlebell oder erst im Stand 20–30 s halten.</p>
+</div>
+</div>
+</section>
+<section class="ex" id="b5">
+<header class="exhead"><span class="bignum">B5</span><div><h2>Open Book</h2><p class="de">Brustwirbelsäulen-Rotation in Seitenlage</p></div></header>
+<div class="exgrid">
+<div class="media sk">
+<div class="stills sketch"><figure><img src="b5_a.svg" alt="Open Book, Skizze Start" loading="lazy"><figcaption>Start</figcaption></figure><figure><img src="b5_b.svg" alt="Open Book, Skizze Ende" loading="lazy"><figcaption>Ende</figcaption></figure></div>
+</div>
+<div class="text">
+<dl class="dose">
+<div><dt>Sätze × Wdh</dt><dd>2 × 8 pro Seite</dd></div>
+<div><dt>Last</dt><dd>Körpergewicht</dd></div>
+<div><dt>Tempo</dt><dd>3 s aufklappen · 2 s halten · 3 s zurück</dd></div>
+<div><dt>Geräte</dt><dd>Boden, Kissen</dd></div>
+</dl>
+<p class="target"><span class="lbl">Zielmuskeln</span> Rotation der Brustwirbelsäule, Dehnung der Brustmuskulatur</p>
+<p>Mobilisiert die Brustwirbelsäule ohne Last. Die angewinkelten Knie fixieren das Becken, so kommt die Drehung wirklich aus dem Brustkorb. Ergänzt Übung 07 aus Einheit A.</p>
+<h3>Setup</h3><p>Seitenlage, Kopf auf einem Kissen, Hüfte und Knie etwa 90° gebeugt. Beide Arme gestreckt vor der Brust, Handflächen aufeinander.</p>
+<h3>Ausführung</h3><ol class="steps"><li>Start: Arme übereinander, Knie zusammen.</li><li>Oberen Arm in einem Bogen über den Körper zur anderen Seite aufklappen. Der Blick folgt der Hand, die Knie bleiben am Boden.</li><li>2 s halten, dabei ausatmen, langsam zurück.</li></ol>
+<h3>Typische Fehler</h3><ul class="errs"><li>Knie heben ab und das Becken dreht mit</li><li>Arm wird schnell geschwungen</li><li>Ziehen vorn in der Schulter: Bogen kleiner machen</li></ul>
+<p class="easier"><span class="lbl">Leichter machen</span> Arm gebeugt lassen, Hand am Hinterkopf.</p>
+</div>
+</div>
+</section>
+  </div>
+
+  <section class="block" id="progression">
+    <div class="wrap">
+      <h2>Progression im Winter Arc</h2>
+      <p>Abgestimmt auf die Phasen vom 12.10.2026 bis 3.1.2027. Steigere erst, wenn du in allen Sätzen die obere Wiederholungszahl sauber schaffst.</p>
+      <div class="prog">
+        <div class="now"><div class="w">Woche 1–4</div><div class="p">Fundament</div><p class="d">2 Sätze, untere Wiederholungszahl. Technik und Gefühl für die Positionen.</p></div>
+        <div><div class="w">Woche 5–7</div><div class="p">Steigern</div><p class="d">3 Sätze, obere Wiederholungszahl, danach +0,5–1 kg oder eine Kabelstufe.</p></div>
+        <div><div class="w">Woche 8</div><div class="p">Deload</div><p class="d">1–2 Sätze, Gewicht etwa 30 % runter. Nur Bewegungsqualität.</p></div>
+        <div><div class="w">Woche 9–10</div><div class="p">Peak</div><p class="d">3 Sätze, 3 s Exzentrik überall. Dead Hang 45–60 s.</p></div>
+        <div><div class="w">Woche 11–12</div><div class="p">Erhalten</div><p class="d">2 Sätze, mindestens 2× pro Woche. Kurzversion zählt an Feiertagen.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <h2>Sicherheit</h2>
+      <div class="safety">
+        <div>
+          <h3>Normal</h3>
+          <ul>
+            <li>Brennen oder Ermüden im Muskel</li>
+            <li>Leichtes Ziehen in der Dehnung beim Hängen</li>
+            <li>Muskelkater am nächsten Tag in den ersten Wochen</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Stopp</h3>
+          <ul>
+            <li>Stechender Schmerz im Gelenk, oder Schmerz über 3 von 10</li>
+            <li>Klicken mit Schmerz, Ausstrahlen in den Arm, Kribbeln</li>
+            <li>Beschwerden, die nach 48 h nicht abklingen: ärztlich oder physiotherapeutisch abklären lassen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">Videos und Bilder stammen aus den Instagram-Clips, die du geteilt hast. Nur für dein eigenes Training.</div>
+</footer>
+
+<script>
+(function(){
+  try{
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelectorAll('video').forEach(function(v){ v.removeAttribute('autoplay'); v.pause(); v.setAttribute('controls',''); });
+    }
+  }catch(e){}
+})();
+</script>
+
+</body></html>
